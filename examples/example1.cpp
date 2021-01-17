@@ -1,40 +1,21 @@
 #include <iostream>
+#include <numeric>
 #include "owi/optional.hpp"
 
 int main()
 {
-    static_assert(sizeof(std::optional<char>) == sizeof(owi::optional<char>));
-    static_assert(sizeof(std::optional<int>) == sizeof(owi::optional<int>));
-    static_assert(sizeof(std::optional<long>) == sizeof(owi::optional<long>));
+    owi::optional<int> opt{42};
+    owi::optional<int> empty;
 
-    owi::optional<int> n = owi::nullopt;
-
-    owi::optional<int> oi{3};
-    std::cout << oi.value_or(42) << std::endl;
-
-    auto moi = owi::make_optional<int>(33);
-    std::cout << moi.value() << std::endl;
-
-    using oi_it = owi::optional<int>::iterator;
-    int k = 3;
-    oi_it it{&k};
-    oi_it it2{it};
-    oi_it it3{std::move(it)};
-
-    std::cout << "== owi::optional<int>{666} ==" << std::endl;
-    for (const auto & i : owi::optional<int>{666}) {
+    std::cout << "====   RANGE-BASED FOR LOOP  ====\n";
+    for (int i : opt)
         std::cout << i << std::endl;
-    }
 
-    std::cout << "== owi::optional<int>{owi::nullopt} ==" << std::endl;
-    for (const auto & i : owi::optional<int>{owi::nullopt}) {
+    std::cout << "\n====   RANGE-BASED FOR LOOP for empty optional  ====\n";
+    for (int i : empty)
         std::cout << i << std::endl;
-    }
 
-    {
-        owi::optional<int> oi3{3};
-        owi::optional<int> oi3_{3};
-        // todo
-        //std::cout << (oi3 == oi3_) << std::endl;
-    }
+    std::cout << "\n====   Standard algorigms with optional  ====\n";
+    std::cout << "Sum of elements: " << std::accumulate(opt.cbegin(), opt.cend(), 0) << std::endl;
+
 }

@@ -25,7 +25,7 @@ namespace owi
             using reference         = value_type &;
 
             constexpr iterator_template() noexcept = default;
-            constexpr explicit iterator_template(Tp *ptr) noexcept : ptr_(ptr) { }
+            constexpr explicit iterator_template(pointer ptr) noexcept : ptr_(ptr) { }
 
             reference operator*() const { return *ptr_; }
 
@@ -57,7 +57,7 @@ namespace owi
             }
 
         private:
-            Tp *ptr_{nullptr};
+            pointer ptr_{nullptr};
         };
 
     public:
@@ -74,6 +74,11 @@ namespace owi
             return this->has_value() ? iterator{&(**this)} : iterator{nullptr};
         }
 
+        const_iterator begin() const noexcept 
+        {
+            return this->has_value() ? const_iterator{&(**this)} : const_iterator{nullptr};
+        }
+
         const_iterator cbegin() const noexcept
         {
             return begin();
@@ -82,6 +87,11 @@ namespace owi
         iterator end() noexcept
         {
             return iterator{nullptr};
+        }
+
+        const_iterator end() const noexcept
+        {
+            return const_iterator{nullptr};
         }
 
         const_iterator cend() const noexcept
@@ -113,6 +123,75 @@ namespace owi
     noexcept(std::is_nothrow_constructible_v<Tp, std::initializer_list<Up>&, Args...>)
     { 
         return optional<Tp>{ std::in_place, il, std::forward<Args>(args)... }; 
+    }
+
+    namespace detail
+    {
+        template<typename Tp>
+        constexpr
+        const std::optional<Tp>& cdowncast(const optional<Tp>& arg) noexcept
+        {
+            return static_cast<const std::optional<Tp>&>(arg);
+        }
+
+        template<typename Tp>
+        constexpr
+        std::optional<Tp>& downcast(optional<Tp>& arg) noexcept
+        {
+            return static_cast<std::optional<Tp>&>(arg);
+        }
+    }
+
+    // Comparisons between optional values.
+    template<typename Tp, typename Up>
+    constexpr auto
+    operator==(const optional<Tp>& lhs, const optional<Up>& rhs)
+    {
+        return detail::cdowncast(lhs) == detail::cdowncast(rhs);
+    }
+
+    template<typename Tp, typename Up>
+    constexpr auto
+    operator!=(const optional<Tp>& lhs, const optional<Up>& rhs)
+    {
+        return detail::cdowncast(lhs) != detail::cdowncast(rhs);
+    }
+
+    template<typename Tp, typename Up>
+    constexpr auto
+    operator<(const optional<Tp>& lhs, const optional<Up>& rhs)
+    {
+        return detail::cdowncast(lhs) < detail::cdowncast(rhs);
+    }
+
+    template<typename Tp, typename Up>
+    constexpr auto
+    operator<=(const optional<Tp>& lhs, const optional<Up>& rhs)
+    {
+        return detail::cdowncast(lhs) <= detail::cdowncast(rhs);
+    }
+
+    template<typename Tp, typename Up>
+    constexpr auto
+    operator>(const optional<Tp>& lhs, const optional<Up>& rhs)
+    {
+        return detail::cdowncast(lhs) > detail::cdowncast(rhs);
+    }
+
+    template<typename Tp, typename Up>
+    constexpr auto
+    operator>=(const optional<Tp>& lhs, const optional<Up>& rhs)
+    {
+        return detail::cdowncast(lhs) >= detail::cdowncast(rhs);
+    }
+
+    // swap function
+    template<typename Tp>
+    void
+    swap(optional<Tp>& lhs, optional<Tp>& rhs)
+    noexcept(noexcept(std::swap(detail::downcast(lhs), detail::downcast(rhs))))
+    { 
+        std::swap(detail::downcast(lhs), detail::downcast(rhs));
     }
 } // namespace owi
 
