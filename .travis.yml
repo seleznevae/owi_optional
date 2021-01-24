@@ -2,7 +2,6 @@ language: C++
 
 matrix:
   include:
-
     - name: linux-g++7
       os: linux
       addons:
@@ -35,6 +34,17 @@ matrix:
             - g++-9
       env:
         - MATRIX_EVAL="CC=gcc-9 && CXX=g++-9"
+
+    - name: linux-g++10
+      os: linux
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-10
+      env:
+        - MATRIX_EVAL="CC=gcc-10 && CXX=g++-10"
 
 before_install:
     - eval "${MATRIX_EVAL}"
