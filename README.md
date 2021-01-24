@@ -1,5 +1,7 @@
 # owi_optional - standard c++ std::optional with iterators
 
+[![Build Status](https://travis-ci.com/seleznevae/owi_optional.svg?branch=master)](https://travis-ci.com/seleznevae/owi_optional)
+
 ## Motivation
 
 Enable usage of `optional` in contexts where containers can be used (in range-based for loop, in standard algorithms, generic template functions that receive iterators or range as arguments).

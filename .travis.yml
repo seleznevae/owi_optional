@@ -3,7 +3,8 @@ language: C++
 matrix:
   include:
 
-    - os: linux
+    - name: linux-g++7
+      os: linux
       addons:
         apt:
           sources:
@@ -13,7 +14,8 @@ matrix:
       env:
         - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
 
-    - os: linux
+    - name: linux-g++8
+      os: linux
       addons:
         apt:
           sources:
@@ -22,8 +24,9 @@ matrix:
             - g++-8
       env:
         - MATRIX_EVAL="CC=gcc-8 && CXX=g++-8"
-    
-    - os: linux
+
+    - name: linux-g++9
+      os: linux
       addons:
         apt:
           sources:
