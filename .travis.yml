@@ -1,0 +1,6 @@
+language: C++
+
+script:
+  - cmake .
+  - cmake --build .
+  - tests/owi_tests
