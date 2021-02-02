@@ -51,6 +51,6 @@ before_install:
     - eval "${MATRIX_EVAL}"
 
 script:
-  - cmake .
+  - cmake -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain.cmake -DCMAKE_VERBOSE_MAKEFILE=true .
   - cmake --build .
   - tests/owi_tests
